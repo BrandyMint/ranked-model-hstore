@@ -4,7 +4,7 @@
 
 Это вытяжка concern-а отвечающего за сортирову товаров в различных категориях через позицию в hstore применяемыую в проекте http://kiiiosk.ru/
 
-За основу был взят код из модуля (https://github.com/mixonic/ranked-model)[ranked-model]
+За основу был взят код из модуля https://github.com/mixonic/ranked-model
 
 ## Что с этим не так?
 
