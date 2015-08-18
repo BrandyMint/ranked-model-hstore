@@ -1,12 +1,13 @@
-require 'rails_helper'
+require './spec/spec_helper'
+
+require './lib/product_sortable_by_category'
 
 RSpec.describe ProductSortableByCategory, type: :model do
-  let!(:vendor) { create :vendor }
-  let!(:category) { create :category, vendor: vendor }
-  let(:category_id) { category.id }
-  let!(:product1) { create :product, vendor: vendor, category: category }
-  let!(:product2) { create :product, vendor: vendor, category: category }
-  let!(:product3) { create :product, vendor: vendor, category: category }
+  let(:category_id) { 123 }
+  let(:categories_id) { [category_id] }
+  let!(:product1) { create :product, categories_id: categories_id }
+  let!(:product2) { create :product, categories_id: categories_id }
+  let!(:product3) { create :product, categories_id: categories_id }
 
   describe '#changed_categories_ids' do
     it 'возвращает только измененные ids' do
@@ -71,8 +72,7 @@ RSpec.describe ProductSortableByCategory, type: :model do
     it do
       pos2 = product2.ranked_position_in_category(category_id)
       product = create :product,
-                       vendor: vendor,
-                       category: category,
+                       categories_id: categories_id,
                        category_positions: { category_id.to_s => pos2 }
 
       pos = product.ranked_position_in_category(category_id)
@@ -83,8 +83,7 @@ RSpec.describe ProductSortableByCategory, type: :model do
   end
 
   context 'Новая категория, автоматически добавляем позицию' do
-    let!(:category2) { create :category, vendor: vendor }
-    let(:category_id) { category2.id }
+    let(:category_id) { 456 }
 
     it 'товара нет в этой категории и его позиция nil' do
       expect(product1.ranked_position_in_category(category_id)).to be nil
@@ -110,8 +109,8 @@ RSpec.describe ProductSortableByCategory, type: :model do
   end
 
   context 'Товары без позиции получают позицию как только она появляется хотя-бы у одного' do
-    let!(:product1) { create :product, vendor: vendor }
-    let!(:product2) { create :product, vendor: vendor }
+    let!(:product1) { create :product }
+    let!(:product2) { create :product }
 
     before do
       Product.where(id: [product1.id, product2.id]).update_all "categories_ids=ARRAY[#{category.id}]"
