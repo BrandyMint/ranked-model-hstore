@@ -16,7 +16,9 @@ def darwin_only(require_as)
   RbConfig::CONFIG['host_os'] =~ /darwin/ ? require_as : false
 end
 
+gem 'pg'
 gem 'activerecord', '~> 4.1'
+gem 'activesupport', '~> 4.1'
 
 group :test, :development do
 gem 'pry'

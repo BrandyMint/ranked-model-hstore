@@ -1,15 +1,24 @@
 #require "bundler/gem_tasks"
 require 'bundler'
-begin
-  require 'rspec/core/rake_task'
-  RSpec::Core::RakeTask.new(:spec)
-  task :default => :spec
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
+task :default => :spec
 
-rescue LoadError
+require './spec/env'
+desc "Run migrations"
+task :migrate do
+  load './db/schema.rb'
 end
 
-require 'yard'
-YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb']   # optional
-  #t.options = ['--any', '--extra', '--opts'] # optional
+include ActiveRecord::Tasks
+root = '.'
+DatabaseTasks.env = ENV['ENV'] || 'development'
+DatabaseTasks.database_configuration = YAML.load(File.read(File.join(root, 'config/database.yml')))
+DatabaseTasks.root = root
+
+task :environment do
+  ActiveRecord::Base.configurations = DatabaseTasks.database_configuration
+  ActiveRecord::Base.establish_connection DatabaseTasks.env.to_sym
 end
+
+load 'active_record/railties/databases.rake'

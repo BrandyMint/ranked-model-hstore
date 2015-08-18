@@ -1,3 +1,5 @@
+require 'active_support'
+
 module ProductSortableByCategory
   extend ActiveSupport::Concern
 

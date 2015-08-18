@@ -1,11 +1,4 @@
-#require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:test)
-require 'pry'
-require 'active_record'
-require 'factory_girl'
-require './lib/product_sortable_by_category'
-require './spec/models/product'
+require './spec/env'
 
 ActiveRecord::Migration.maintain_test_schema!
 
